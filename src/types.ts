@@ -247,6 +247,25 @@ export const BaseMetadataSchema = z
     })
     .passthrough();
 
+/**
+ * Group schema definition
+ */
+export const GroupSchema = BaseMetadataSchema.extend({
+    /**
+     * A human-readable description of the group.
+     */
+    description: z.optional(z.string()),
+    /**
+     * optional parent GroupSchema
+     */
+    parent: z.optional(GroupSchema),
+    /**
+     * See [MCP specification](https://github.com/modelcontextprotocol/modelcontextprotocol/blob/47339c03c143bb4ec01a26e721a1b8fe66634ebe/docs/specification/draft/basic/index.mdx#general-fields)
+     * for notes on _meta usage.
+     */
+    _meta: z.optional(z.object({}).passthrough())
+});
+
 /* Initialization */
 /**
  * Describes the name and version of an MCP implementation.
@@ -531,6 +550,11 @@ export const ResourceSchema = BaseMetadataSchema.extend({
     description: z.optional(z.string()),
 
     /**
+     * optional array of Groups this resource is contained by
+     */
+    groups: z.optional(z.array(GroupSchema));
+
+    /**
      * The MIME type of this resource, if known.
      */
     mimeType: z.optional(z.string()),
@@ -557,6 +581,11 @@ export const ResourceTemplateSchema = BaseMetadataSchema.extend({
      * This can be used by clients to improve the LLM's understanding of available resources. It can be thought of like a "hint" to the model.
      */
     description: z.optional(z.string()),
+
+    /**
+     * optional array of Groups this ResourceTemplate is contained by
+     */
+    groups: z.optional(z.array(GroupSchema)),
 
     /**
      * The MIME type for all resources that match this template. This should only be included if all resources matching this template have the same type.
@@ -697,6 +726,10 @@ export const PromptSchema = BaseMetadataSchema.extend({
      * A list of arguments to use for templating the prompt.
      */
     arguments: z.optional(z.array(PromptArgumentSchema)),
+    /**
+     * optional array of Groups this PromptSchema is contained by
+     */
+    groups: z.optional(z.array(GroupSchema)),
     /**
      * See [MCP specification](https://github.com/modelcontextprotocol/modelcontextprotocol/blob/47339c03c143bb4ec01a26e721a1b8fe66634ebe/docs/specification/draft/basic/index.mdx#general-fields)
      * for notes on _meta usage.
@@ -928,6 +961,11 @@ export const ToolSchema = BaseMetadataSchema.extend({
      * A human-readable description of the tool.
      */
     description: z.optional(z.string()),
+    /**
+     * optional array of Groups this Tool is contained by
+     */
+    groups: z.optional(z.array(GroupSchema)),
+    
     /**
      * A JSON Schema object defining the expected parameters for the tool.
      */
