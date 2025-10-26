@@ -552,7 +552,7 @@ export const ResourceSchema = BaseMetadataSchema.extend({
     /**
      * optional array of Groups this resource is contained by
      */
-    groups: z.optional(z.array(GroupSchema));
+    groups: z.optional(z.array(GroupSchema)),
 
     /**
      * The MIME type of this resource, if known.
